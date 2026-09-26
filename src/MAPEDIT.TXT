@@ -1,0 +1,179 @@
+     '||''|.    ..|''||   '|.   '|' '||''''|  '||'  |'  '||''''|  '||''''|  '||''|.
+      ||   ||  .|'    ||   |'|   |   ||  .     || .'     ||  .     ||  .     ||   ||
+      ||'''|.  ||      ||  | '|. |   ||''|     ||'|.     ||''|     ||''|     ||...|'
+      ||    || '|.     ||  |   |||   ||        ||  ||    ||        ||        ||
+     .||...|'   ''|...|'  .|.   '|  .||.....| .||.  ||. .||.....| .||.....| .||.
+
+
+BONEKEEP MAP TOOLS
+==================
+
+MEDIT, MENCODE AND MDECODE
+
+These three programs form the BONEKEEP map editing toolchain.
+
+    MEDIT    edits the raw text .MAP file.
+    MENCODE  converts a raw text map into an encoded BONEKEEP level file.
+    MDECODE  converts an encoded BONEKEEP level back into a raw text map.
+
+The map format supports a maximum size of 75 columns by 24 rows.
+
+
+MEDIT
+-----
+
+Syntax:
+
+    MEDIT filename
+
+Example:
+
+    MEDIT LEVEL0.MAP
+
+If the named file exists, MEDIT loads it for editing.
+If the named file does not exist, MEDIT starts with a blank map.
+
+Controls:
+
+    w           move cursor up
+    s           move cursor down
+    a           move cursor left
+    d           move cursor right
+    SPACE       place a void/blank square
+    symbol key  place that map symbol at the cursor
+    ENTER       finish editing
+
+After ENTER, MEDIT asks:
+
+    Save & Quit or Quit? (s/q)
+
+Press s to save the raw text map and quit.
+Press q to quit without saving.
+
+Lowercase w, a, s and d are reserved for movement.
+Uppercase S and A remain map symbols for Skeleton and Armour.
+
+MEDIT saves a normal text map using CR/LF line endings and a CP/M ^Z EOF.
+Trailing spaces on each line are not written.
+
+
+MENCODE
+-------
+
+Syntax:
+
+    MENCODE input.map LEVEL.nnn
+
+Example:
+
+    MENCODE LEVEL0.MAP LEVEL.000
+
+MENCODE reads a raw text map and writes the encoded BONEKEEP level file.
+The output filename must end in a numeric extension from .000 to .999.
+
+The encoded file uses the BKM1 format.
+It contains an 8-byte header followed by one byte for each map square.
+The format allows 32 tile IDs. IDs 11, 20, 23 and 24 to 31 are currently unused.
+
+LEVEL.000 has special rules:
+
+    It must contain exactly one @ player start.
+    It is the only level allowed to contain @.
+    It is the only level allowed to contain X dungeon exits.
+
+All other levels must contain no @ and no X.
+
+Short map rows are padded with void squares when encoded.
+Maps larger than 75 columns or 24 rows are rejected.
+Unknown map symbols are rejected.
+
+
+MDECODE
+-------
+
+Syntax:
+
+    MDECODE LEVEL.nnn output.map
+
+Example:
+
+    MDECODE LEVEL.000 LEVEL0.MAP
+
+MDECODE reads an encoded BKM1 level and writes a raw text map.
+
+It checks the BKM1 header, map size, tile table and tile IDs.
+Invalid or unsupported level files are rejected.
+
+The decoded text file uses CR/LF line endings.
+
+
+MAP SYMBOLS
+-----------
+
+    space   void / unused area
+    #       wall
+    .       floor
+    @       player start - LEVEL.000 only
+    X       dungeon exit - LEVEL.000 only
+    >       stairs down
+    <       stairs up
+    $       gold
+    k       key
+    +       closed door
+    L       locked door
+    /       open door
+    S       skeleton
+    Z       zombie
+    x       pile of bones
+    !       sword
+    *       shield
+    A       armour
+    p       potion
+    f       food
+    C       coffin
+
+LEVEL CONNECTIONS
+-----------------
+
+LEVEL.000 is the starting level.
+
+Going down increases the level number:
+
+    000 -> 001 -> 002 -> ... -> 999 -> 000
+
+Going up decreases the level number:
+
+    000 -> 999 -> 998 -> ... -> 001 -> 000
+
+A down stair > must connect to an up stair < at the same map coordinates
+on the destination level.
+
+An up stair < must connect to a down stair > at the same map coordinates
+on the destination level.
+
+A level may contain several up and down stair locations.
+
+
+TYPICAL WORKFLOW
+----------------
+
+1. Edit or create a raw map:
+
+       MEDIT LEVEL0.MAP
+
+2. Encode it for BONEKEEP:
+
+       MENCODE LEVEL0.MAP LEVEL.000
+
+3. To inspect or recover an encoded level later:
+
+       MDECODE LEVEL.000 LEVEL0.MAP
+
+4. Edit the decoded file with MEDIT and encode it again when finished.
+
+BONE CROWN
+----------
+
+K is the Bone Crown at runtime. It is not a placeable source-map tile.
+The Crown is created by game events, not by MEDIT or MENCODE.
+
