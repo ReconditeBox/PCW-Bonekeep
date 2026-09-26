@@ -1,0 +1,15 @@
+# Hi-Tech C / CP/M build products
+*.OBJ
+*.COM
+*.LST
+*.SYM
+*.CRF
+*.ERR
+
+# BONEKEEP per-level runtime snapshots
+BK???.TMP
+
+# Editor / backup debris
+*.BAK
+*.bak
+*~
