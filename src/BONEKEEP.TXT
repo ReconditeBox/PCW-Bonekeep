@@ -1,0 +1,333 @@
+'||''|.    ..|''||   '|.   '|' '||''''|  '||'  |'  '||''''|  '||''''|  '||''|.
+      ||   ||  .|'    ||   |'|   |   ||  .     || .'     ||  .     ||  .     ||   ||
+      ||'''|.  ||      ||  | '|. |   ||''|     ||'|.     ||''|     ||''|     ||...|'
+      ||    || '|.     ||  |   |||   ||        ||  ||    ||        ||        ||
+     .||...|'   ''|...|'  .|.   '|  .||.....| .||.  ||. .||.....| .||.....| .||.
+
+
+BONEKEEP
+PLAYER'S MANUAL
+===============
+
+(c) 2026 Tony Blews tonyblews@gmail.com
+
+
+INTRODUCTION
+------------
+
+You have entered BONEKEEP, a dungeon of rooms, passages, doors, treasure and
+restless dead.
+
+Explore carefully, survive what you find, and search for a way out.
+
+
+REQUIRED FILES
+--------------
+
+BONEKEEP.COM requires BONEKEEP.DAT and the LEVEL.xxx files supplied with
+the game. Keep them together in the same directory.
+
+
+PLAYER NAME
+-----------
+
+Before a new game begins, BONEKEEP asks for your name.
+
+Enter from 1 to 30 printable characters and press RETURN.
+BACKSPACE may be used to correct the name before starting.
+
+
+THE SCREEN
+----------
+
+The large area on the left shows the part of the dungeon you have explored.
+
+The panel on the right shows:
+
+    SKILL       your fighting ability
+    STAMINA     your remaining health
+    GOLD        gold collected
+    KEYS        keys carried
+    INVENTORY   up to six carried item slots
+
+Your position is shown by @.
+
+Explored parts of the dungeon remain visible after you leave them.
+
+
+MOVEMENT
+--------
+
+Lowercase movement keys move one square:
+
+    w       up
+    s       down
+    a       left
+    d       right
+
+Uppercase movement keys run in a straight line:
+
+    W       run up
+    S       run down
+    A       run left
+    D       run right
+
+Running stops when something prevents normal movement.
+
+Press . to wait in place for one turn.
+
+Four consecutive . turns restore 1 STAMINA, up to your current maximum.
+Any other action or any combat interrupts the rest sequence.
+
+
+OTHER CONTROLS
+--------------
+
+    c or C      close an adjacent open door
+    o or O      open an adjacent closed or locked door
+    l           lock an adjacent closed door
+    1 to 6      select inventory slots 1 to 6
+    q or Q      quit the game
+
+
+DOORS AND KEYS
+--------------
+
+    +       closed or locked door
+    /       open door.
+
+Walking into an ordinary closed door opens it.
+
+A locked door requires a key. Unlocking it consumes one key, and BONEKEEP
+asks for confirmation before the key is used.
+
+The o command can open an adjacent door without moving through it.
+The c command closes an adjacent open door.
+The l command locks an adjacent closed door.
+
+
+STAIRS
+------
+
+> represents stairs going down.
+< represents stairs going up.
+
+BONEKEEP asks for confirmation before you use stairs.
+
+
+GOLD AND KEYS
+-------------
+
+$ is gold.
+k is a key.
+
+Walking onto gold or a key picks it up automatically.
+
+Gold and keys do not use inventory slots.
+
+
+PILES OF BONES
+--------------
+
+x marks a pile of bones.
+
+Trying to step onto one searches it automatically.
+
+You might find gold. You might find nothing. You might disturb something.
+
+
+ITEMS
+-----
+
+The current item symbols are:
+
+    !       Sword
+    *       Shield
+    A       Armour
+    p       Potion
+    f       Food
+    K       Bone Crown
+
+When you try to step onto an item, BONEKEEP tells you what it is and asks
+whether you want to pick it up.
+
+If you say no, you still move onto the square. The item remains there.
+
+If you say yes, the item is placed in your inventory.
+
+Potions and Food stack.
+
+Drinking a Potion always uses one Potion and one turn. Each Potion has an
+equal chance of one of four effects:
+
+    STAMINA     +4 current and maximum STAMINA for 15 turns
+    SKILL       +2 SKILL for 15 turns
+    INVISIBLE   monsters cannot see or pursue you for 15 turns
+    NOTHING     no effect
+
+Only one Potion effect can be active at once. Drinking another Potion replaces
+the previous effect. Invisibility does not prevent combat if you walk into a
+monster.
+
+Using Food restores some STAMINA, up to your current maximum.
+Food is not consumed if you are already at maximum STAMINA.
+
+
+If the inventory is full, the item remains on the floor.
+
+
+INVENTORY
+---------
+
+The inventory contains six slots, numbered 1 through 6.
+
+Press the slot number to select an item.
+
+The available actions are:
+
+    u       use
+    d       drop
+    e       equip or unequip, where allowed
+
+Sword, Shield, Armour and the Bone Crown can be equipped.
+
+Equipped items are marked with * in the inventory list.
+
+Skeletons and zombies ignore you while the Bone Crown is equipped.
+The vampire remains hostile, but is weaker while separated from the Crown.
+
+Sword, Shield and Armour are shown with a +N value. Higher values indicate
+more powerful equipment.
+
+Equipment found deeper in the dungeon becomes more powerful.
+Skeletons and Zombies also become stronger as you descend.
+
+Only equipped items give their bonuses.
+
+Swords improve your attacks, Shields can block attacks, and Armour can reduce
+damage that gets through.
+
+Equipping another item of the same type automatically unequips the old one.
+
+If you find a better version of an item you already have equipped, BONEKEEP
+offers to replace the equipped item. The inferior equipped item is discarded.
+
+Dropping an equipped item automatically unequips it.
+
+
+COMBAT
+------
+
+Skeletons, zombies, vampires and vampire bats block movement.
+
+Trying to move into one starts combat.
+
+Your SKILL and equipment affect how well you fight. Some attacks can become
+critical hits.
+
+Keep an eye on your STAMINA. If it reaches zero, you are dead.
+
+
+SKELETONS
+---------
+
+S marks a skeleton.
+
+Skeletons move quickly and will pursue you when they can see you.
+
+Walls, closed doors and other creatures can block them.
+
+
+ZOMBIES
+-------
+
+Zombies hit harder than Skeletons when they land a blow.
+
+Z marks a zombie.
+
+Zombies are slower than skeletons but can still be dangerous once they see you.
+
+Walls, closed doors and other creatures can block them.
+
+
+VAMPIRES
+--------
+
+V marks a vampire.
+
+Vampires are powerful undead and pursue you when they can see you.
+
+The Crown Vampire has a different generated name in each new game.
+Vampire transformations and Crown recovery are announced by name.
+
+A badly wounded vampire changes into a bat, shown by the " symbol.
+
+When this happens, the Bone Crown is left behind, shown as K.
+
+The bat flees rapidly while recovering. If it survives long enough, it changes
+back into a vampire.
+
+
+COFFINS
+-------
+
+C marks a coffin.
+
+Trying to move into a coffin asks whether you want to open it.
+
+If you decline, you stay where you are.
+
+Opening the coffin wakes the Crown Vampire.
+
+
+LEAVING THE DUNGEON
+-------------------
+
+X is a dungeon exit.
+
+You can only escape while carrying the Bone Crown.
+
+Escaping completes the game and displays a record of your adventure.
+
+
+MAP SYMBOL SUMMARY
+------------------
+
+    @       player
+    #       wall
+    .       floor
+    X       dungeon exit
+    >       stairs down
+    <       stairs up
+    $       gold
+    k       key
+    +       closed or locked door
+    /       open door
+    S       skeleton
+    Z       zombie
+    V       vampire
+    "       vampire bat
+    x       pile of bones
+    !       sword
+    *       shield
+    A       armour
+    p       potion
+    f       food
+    K       Bone Crown
+    C       coffin
+
+
+TIPS
+----
+
+Doors can be useful barriers between you and pursuing undead.
+
+Skeletons are fast. Zombies are slower, but no less worth respecting.
+
+Bone piles are worth searching, but not always safe.
+
+Keys are useful. Do not waste them.
+
+
+Good luck in BONEKEEP.
+
