@@ -1,0 +1,49 @@
+name: Complete BONEKEEP import
+
+on:
+  push:
+    paths:
+      - ".github/workflows/unstage.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  unpack:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Reconstruct exact files
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p src runtime
+          base64 -d staging/GAME.C.gz.b64 | gzip -d > src/GAME.C
+          base64 -d staging/INV.C.gz.b64 | gzip -d > src/INV.C
+          base64 -d staging/MONSTER.C.gz.b64 | gzip -d > src/MONSTER.C
+          base64 -d staging/VIS.C.gz.b64 | gzip -d > src/VIS.C
+          base64 -d staging/BONEKEEP.DAT.gz.b64 | gzip -d > runtime/BONEKEEP.DAT
+
+          echo "c89c7cf494824f01099de83d7c4ecc7ef72a17bd  src/GAME.C" > /tmp/checks
+          echo "65d9a33b484fa67ba29440a18c6557366a514439  src/INV.C" >> /tmp/checks
+          echo "68c96482656b181de32f9e5665754fef7f38ed50  src/MONSTER.C" >> /tmp/checks
+          echo "93c0db4e082939d0375a216cdc2f051e7978308e  src/VIS.C" >> /tmp/checks
+          echo "89bcc335c2afc1ec7124f26a1fca19758d1e7879  runtime/BONEKEEP.DAT" >> /tmp/checks
+
+          while read -r expected file; do
+            actual=$(printf "blob %s\0" "$(wc -c < "$file")" | cat - "$file" | sha1sum | awk '{print $1}')
+            test "$actual" = "$expected"
+          done < /tmp/checks
+
+      - name: Commit final files and remove staging
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "Tony Blews"
+          git config user.email "36636527+ReconditeBox@users.noreply.github.com"
+          git add src/GAME.C src/INV.C src/MONSTER.C src/VIS.C runtime/BONEKEEP.DAT
+          git rm -r staging
+          git rm .github/workflows/unstage.yml
+          git commit -m "Complete initial BONEKEEP import"
+          git push
