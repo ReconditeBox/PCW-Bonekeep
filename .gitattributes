@@ -1,0 +1,14 @@
+# Preserve target CP/M source bytes exactly.
+# These files use CR/LF and some use a final Ctrl-Z byte.
+src/*.C -text
+src/*.H -text
+src/*.SUB -text
+src/*.TXT -text
+maps/*.MAP -text
+runtime/BONEKEEP.DAT -text
+
+# Repository-only files use normal Git text handling.
+README.md text eol=lf
+LICENSE text eol=lf
+.gitignore text eol=lf
+.gitattributes text eol=lf
