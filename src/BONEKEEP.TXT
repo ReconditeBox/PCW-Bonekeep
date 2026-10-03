@@ -42,6 +42,9 @@ THE SCREEN
 
 The large area on the left shows the part of the dungeon you have explored.
 
+On BONE80.COM this is a scrolling 64 x 18 view of the same 75 x 24
+dungeon.  The view follows you automatically as you move.
+
 The panel on the right shows:
 
     SKILL       your fighting ability
