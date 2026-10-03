@@ -50,6 +50,29 @@ char *text;
 }
 
 
+int pcw_view_update(x, y)
+int x;
+int y;
+{
+    return 0;
+}
+
+
+void pcw_map_char(x, y, c)
+int x;
+int y;
+char c;
+{
+    pcw_goto(
+        MAP_X + x,
+        MAP_Y + y
+    );
+
+
+    putch(c);
+}
+
+
 void pcw_number(n)
 unsigned int n;
 {
