@@ -58,7 +58,7 @@ status and inventory panel on the right and messages at the bottom.
 The VT100 build uses standard CP/M 2.2 console services for its startup random
 seed rather than the CP/M Plus clock BDOS call used by the PCW build.
 
-The map utilities are built by the commands in:
+The PCW map utilities are built by the commands in:
 
     BUILDM.SUB
 
@@ -67,6 +67,14 @@ This produces:
 - `MENCODE.COM`
 - `MDECODE.COM`
 - `MEDIT.COM`
+
+For generic CP/M 2.2 with an 80 x 24 VT100 terminal, use:
+
+    BUILDM80.SUB
+
+This produces the same terminal-independent `MENCODE.COM` and
+`MDECODE.COM`, plus `MEDIT80.COM`. The VT100 editor keeps the logical
+75 x 24 map size and presents it through a scrolling 64 x 18 viewport.
 
 ## Building level files
 
