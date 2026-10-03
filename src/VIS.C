@@ -5,7 +5,7 @@
 #define V_NEW   2
 
 
-static unsigned char vis[MAP_H][MAP_W];
+static unsigned char vis[LEVEL_H][LEVEL_W];
 
 static int redraw_pending;
 
@@ -575,6 +575,31 @@ int bottom;
 
     for (y = top; y <= bottom; ++y) {
 
+#ifdef VT100_80
+
+        /*
+         * A scrolling viewport cannot emit one raw run
+         * using logical dungeon coordinates.  Let the
+         * terminal driver clip and translate each cell.
+         */
+
+        for (x = left; x <= right; ++x) {
+
+            if (vis[y][x] & V_NEW) {
+
+                pcw_map_char(
+                    x,
+                    y,
+                    display_char(x, y)
+                );
+
+
+                vis[y][x] &= ~V_NEW;
+            }
+        }
+
+#else
+
         x = left;
 
 
@@ -610,6 +635,8 @@ int bottom;
                 ++x;
             }
         }
+
+#endif
     }
 }
 
@@ -637,9 +664,9 @@ void visibility_reset()
     int y;
 
 
-    for (y = 0; y < MAP_H; ++y) {
+    for (y = 0; y < LEVEL_H; ++y) {
 
-        for (x = 0; x < MAP_W; ++x)
+        for (x = 0; x < LEVEL_W; ++x)
             vis[y][x] = 0;
     }
 
@@ -738,6 +765,33 @@ int y;
  * creature has moved onto the square.
  */
 
+#ifdef VT100_80
+
+static void redraw_seen()
+{
+    int x;
+    int y;
+
+
+    for (y = 0; y < level_h; ++y) {
+
+        for (x = 0; x < level_w; ++x) {
+
+            if (vis[y][x] & V_SEEN) {
+
+                pcw_map_char(
+                    x,
+                    y,
+                    display_char(x, y)
+                );
+            }
+        }
+    }
+}
+
+#endif
+
+
 void draw_old_position(x, y)
 int x;
 int y;
@@ -750,13 +804,9 @@ int y;
         return;
 
 
-    pcw_goto(
-        MAP_X + x,
-        MAP_Y + y
-    );
-
-
-    putch(
+    pcw_map_char(
+        x,
+        y,
         display_char(x, y)
     );
 }
@@ -764,13 +814,24 @@ int y;
 
 void draw_player()
 {
-    pcw_goto(
-        MAP_X + player_x,
-        MAP_Y + player_y
+#ifdef VT100_80
+
+    if (pcw_view_update(
+            player_x,
+            player_y)) {
+
+        pcw_clear_map();
+        redraw_seen();
+    }
+
+#endif
+
+
+    pcw_map_char(
+        player_x,
+        player_y,
+        '@'
     );
-
-
-    putch('@');
 }
 
 
@@ -788,7 +849,7 @@ int x;
 int y;
 {
     if (x < 0 || y < 0 ||
-        x >= MAP_W || y >= MAP_H)
+        x >= LEVEL_W || y >= LEVEL_H)
         return 0;
 
 
@@ -805,7 +866,7 @@ int value;
 
 
     if (x < 0 || y < 0 ||
-        x >= MAP_W || y >= MAP_H)
+        x >= LEVEL_W || y >= LEVEL_H)
         return;
 
 
