@@ -57,6 +57,34 @@ MEDIT saves a normal text map using CR/LF line endings and a CP/M ^Z EOF.
 Trailing spaces on each line are not written.
 
 
+MEDIT80
+-------
+
+MEDIT80 is the generic CP/M 2.2 / VT100 version of MEDIT.
+It requires an 80 x 24 VT100-compatible terminal.
+
+Syntax:
+
+    MEDIT80 filename
+
+The map format and editing controls are identical to MEDIT.
+Because the full 75 x 24 map and sidebar cannot fit on an 80 x 24 screen,
+MEDIT80 uses a scrolling 64 x 18 viewport.  The viewport follows the cursor
+automatically near its edges.  The bottom status line shows both the logical
+map cursor coordinates and the current viewport origin.
+
+BUILDING THE VT100 TOOLS
+------------------------
+
+Run:
+
+    SUBMIT BUILDM80
+
+This builds MENCODE.COM, MDECODE.COM and MEDIT80.COM.
+MENCODE and MDECODE are terminal-independent and are the same utilities used
+with the PCW editor.
+
+
 MENCODE
 -------
 
