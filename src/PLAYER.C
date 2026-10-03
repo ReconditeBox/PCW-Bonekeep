@@ -22,7 +22,7 @@ static void show_player_skill()
 {
     pcw_goto(
         PANEL_VALUE_X,
-        6
+        STAT_SKILL_Y
     );
 
 
@@ -36,7 +36,7 @@ static void show_player_stamina()
 {
     pcw_goto(
         PANEL_VALUE_X,
-        7
+        STAT_STAMINA_Y
     );
 
 
