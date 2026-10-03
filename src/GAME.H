@@ -3,17 +3,58 @@
 
 
 /*
- * BONEKEEP screen layout.
+ * BONEKEEP dungeon and screen layout.
  *
- * Game display uses 90 x 30.
- * PCW rows 30 and 31 are unused.
+ * LEVEL_W/LEVEL_H are the logical dungeon dimensions
+ * used by maps, visibility and saved level state.
+ *
+ * The PCW target shows the whole dungeon at 90 x 30.
+ * VT100_80 uses a scrolling 64 x 18 viewport inside
+ * a standard 80 x 24 terminal.
  */
+
+#define LEVEL_W         75
+#define LEVEL_H         24
+
+#ifdef VT100_80
+
+#define SCREEN_W        80
+#define SCREEN_H        24
+
+#define MAP_W           64
+#define MAP_H           18
+
+#define MAP_X           1
+#define MAP_Y           1
+
+#define DIVIDER_X       65
+
+#define PANEL_X         66
+#define PANEL_W         13
+#define PANEL_VALUE_X   76
+
+#define RIGHT_X         79
+
+#define STAT_SKILL_Y    3
+#define STAT_STAMINA_Y  4
+#define STAT_GOLD_Y     5
+#define STAT_KEYS_Y     6
+
+#define INV_TITLE_Y     8
+#define INV_FIRST_Y     9
+
+#define MESSAGE_X       1
+#define MESSAGE_Y       20
+#define MESSAGE_W       78
+#define MESSAGE_LINES   3
+
+#else
 
 #define SCREEN_W        90
 #define SCREEN_H        30
 
-#define MAP_W           75
-#define MAP_H           24
+#define MAP_W           LEVEL_W
+#define MAP_H           LEVEL_H
 
 #define MAP_X           1
 #define MAP_Y           1
@@ -26,10 +67,20 @@
 
 #define RIGHT_X         89
 
+#define STAT_SKILL_Y    6
+#define STAT_STAMINA_Y  7
+#define STAT_GOLD_Y     10
+#define STAT_KEYS_Y     11
+
+#define INV_TITLE_Y     14
+#define INV_FIRST_Y     15
+
 #define MESSAGE_X       1
 #define MESSAGE_Y       26
 #define MESSAGE_W       88
 #define MESSAGE_LINES   3
+
+#endif
 
 
 #define MAX_MONSTERS    64
@@ -59,7 +110,7 @@ extern int srand();
 extern int bdos();
 
 
-extern char level[MAP_H][MAP_W];
+extern char level[LEVEL_H][LEVEL_W];
 
 extern int level_w;
 extern int level_h;
@@ -98,6 +149,8 @@ void pcw_clear();
 void pcw_cursor();
 void pcw_erase_eol();
 void pcw_text();
+int pcw_view_update();
+void pcw_map_char();
 void pcw_number();
 void pcw_number2();
 void pcw_victory();
