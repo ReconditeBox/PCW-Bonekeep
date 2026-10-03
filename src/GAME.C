@@ -30,6 +30,10 @@ static int escaped;
 static int message_active;
 
 static unsigned int turn_count;
+
+#ifdef VT100_80
+static unsigned int seed_noise;
+#endif
 static int current_level;
 
 
@@ -48,6 +52,9 @@ static void quit_game();
 static void confirm_quit();
 
 static void seed_random();
+#ifdef VT100_80
+static void wait_seed_key();
+#endif
 static void create_player();
 static void ask_player_name();
 
@@ -70,6 +77,40 @@ static void open_adjacent_door();
 static void lock_adjacent_door();
 static void draw_door();
 
+
+#ifdef VT100_80
+
+static void show_splash()
+{
+    pcw_text(16, 5,  "BBBB   OOO  N   N EEEEE K  K  EEEEE EEEEE PPPP");
+    pcw_text(16, 6,  "B   B O   O NN  N E     K K   E     E     P   P");
+    pcw_text(16, 7,  "BBBB  O   O N N N EEEE  KK    EEEE  EEEE  PPPP");
+    pcw_text(16, 8,  "B   B O   O N  NN E     K K   E     E     P");
+    pcw_text(16, 9,  "BBBB   OOO  N   N EEEEE K  K  EEEEE EEEEE P");
+
+
+    pcw_text(
+        22,
+        13,
+        "Generic CP/M 2.2 / VT100 edition"
+    );
+
+
+    pcw_text(
+        20,
+        16,
+        "(c) 2026 Tony Blews tonyblews\100gmail.com"
+    );
+
+
+    pcw_text(
+        27,
+        20,
+        "Press any key to enter..."
+    );
+}
+
+#else
 
 static void show_splash()
 {
@@ -151,6 +192,8 @@ static void show_splash()
         "Press any key to enter..."
     );
 }
+
+#endif
 
 
 static void ask_player_name()
@@ -245,6 +288,67 @@ static void ask_player_name()
 }
 
 
+#ifdef VT100_80
+
+static void wait_seed_key()
+{
+    int c;
+
+
+    seed_noise = 0x1357;
+
+
+    for (;;) {
+
+        c = bdos(6, 255);
+
+
+        seed_noise =
+            (seed_noise << 1) ^
+            (seed_noise >> 3) ^
+            0x41;
+
+
+        if (c != 0)
+            break;
+    }
+}
+
+
+static void seed_random()
+{
+    unsigned int seed;
+    int i;
+
+
+    seed = seed_noise;
+
+
+    for (i = 0; player_name[i]; ++i) {
+
+        seed =
+            (seed * 33) ^
+            (unsigned int)
+                (unsigned char)player_name[i];
+    }
+
+
+    seed ^=
+        ((unsigned int)player_x << 8);
+
+    seed ^=
+        (unsigned int)player_y;
+
+
+    if (seed == 0)
+        seed = 1;
+
+
+    srand(seed);
+}
+
+#else
+
 static void seed_random()
 {
     unsigned char dt[4];
@@ -279,6 +383,8 @@ static void seed_random()
     srand(seed);
 }
 
+#endif
+
 
 static void create_player()
 {
@@ -311,14 +417,14 @@ static void show_stats()
 {
     pcw_text(
         PANEL_X,
-        6,
+        STAT_SKILL_Y,
         " SKILL      "
     );
 
 
     pcw_goto(
         PANEL_VALUE_X,
-        6
+        STAT_SKILL_Y
     );
 
 
@@ -329,14 +435,14 @@ static void show_stats()
 
     pcw_text(
         PANEL_X,
-        7,
+        STAT_STAMINA_Y,
         " STAMINA    "
     );
 
 
     pcw_goto(
         PANEL_VALUE_X,
-        7
+        STAT_STAMINA_Y
     );
 
 
@@ -347,14 +453,14 @@ static void show_stats()
 
     pcw_text(
         PANEL_X,
-        10,
+        STAT_GOLD_Y,
         " GOLD       "
     );
 
 
     pcw_goto(
         PANEL_VALUE_X,
-        10
+        STAT_GOLD_Y
     );
 
 
@@ -365,14 +471,14 @@ static void show_stats()
 
     pcw_text(
         PANEL_X,
-        11,
+        STAT_KEYS_Y,
         " KEYS       "
     );
 
 
     pcw_goto(
         PANEL_VALUE_X,
-        11
+        STAT_KEYS_Y
     );
 
 
@@ -386,7 +492,7 @@ static void show_stamina()
 {
     pcw_goto(
         PANEL_VALUE_X,
-        7
+        STAT_STAMINA_Y
     );
 
 
@@ -400,7 +506,7 @@ static void show_gold()
 {
     pcw_goto(
         PANEL_VALUE_X,
-        10
+        STAT_GOLD_Y
     );
 
 
@@ -414,7 +520,7 @@ static void show_keys()
 {
     pcw_goto(
         PANEL_VALUE_X,
-        11
+        STAT_KEYS_Y
     );
 
 
@@ -795,13 +901,11 @@ int x;
 int y;
 char c;
 {
-    pcw_goto(
-        MAP_X + x,
-        MAP_Y + y
+    pcw_map_char(
+        x,
+        y,
+        c
     );
-
-
-    putch(c);
 }
 
 
@@ -2085,6 +2189,59 @@ int dy;
 }
 
 
+#ifdef VT100_80
+
+static void show_death_grave()
+{
+    int len;
+    int x;
+
+
+    pcw_clear();
+    pcw_cursor(0);
+
+
+    pcw_text(35, 3, "BONEKEEP");
+    pcw_text(35, 6, "HERE LIES");
+
+
+    len = 0;
+
+    while (player_name[len] &&
+           len < 30)
+        ++len;
+
+
+    x = (SCREEN_W - len) / 2;
+
+    pcw_text(
+        x,
+        8,
+        player_name
+    );
+
+
+    pcw_text(22, 11, "Your adventure in the Bonekeep is over.");
+
+
+    pcw_text(19, 14, "GOLD");
+    pcw_goto(24, 14);
+    pcw_number(player_gold);
+
+    pcw_text(34, 14, "KILLS");
+    pcw_goto(40, 14);
+    pcw_number(player_kills);
+
+    pcw_text(50, 14, "TURNS");
+    pcw_goto(56, 14);
+    pcw_number(turn_count);
+
+
+    pcw_text(33, 20, "Press any key.");
+}
+
+#else
+
 static void show_death_grave()
 {
     char name[31];
@@ -2283,6 +2440,8 @@ static void show_death_grave()
     );
 }
 
+#endif
+
 
 static void win_game()
 {
@@ -2395,7 +2554,11 @@ int main()
     show_splash();
 
 
+#ifdef VT100_80
+    wait_seed_key();
+#else
     getch();
+#endif
 
 
     ask_player_name();
@@ -2628,7 +2791,7 @@ int main()
     pcw_cursor(1);
 
 
-    pcw_goto(0, 29);
+    pcw_goto(0, SCREEN_H - 1);
 
 
     return 0;
