@@ -185,7 +185,7 @@ int levno;
 
     char name[10];
     char hdr[ST_HDRSZ];
-    char row[MAP_W];
+    char row[LEVEL_W];
     unsigned char rec[ST_RECSZ];
 
 
@@ -193,8 +193,8 @@ int levno;
         return 0;
 
 
-    if (level_w <= 0 || level_w > MAP_W ||
-        level_h <= 0 || level_h > MAP_H)
+    if (level_w <= 0 || level_w > LEVEL_W ||
+        level_h <= 0 || level_h > LEVEL_H)
         return 0;
 
 
@@ -312,7 +312,7 @@ int *countp;
     int i;
 
     char hdr[ST_HDRSZ];
-    char row[MAP_W];
+    char row[LEVEL_W];
     unsigned char rec[ST_RECSZ];
 
 
@@ -345,12 +345,12 @@ int *countp;
 
 
     if (width <= 0 ||
-        width > MAP_W)
+        width > LEVEL_W)
         return 0;
 
 
     if (height <= 0 ||
-        height > MAP_H)
+        height > LEVEL_H)
         return 0;
 
 
@@ -440,7 +440,7 @@ int count;
     int i;
 
     char hdr[ST_HDRSZ];
-    char row[MAP_W];
+    char row[LEVEL_W];
     unsigned char rec[ST_RECSZ];
 
 
@@ -448,9 +448,9 @@ int count;
         return 0;
 
 
-    for (y = 0; y < MAP_H; ++y) {
+    for (y = 0; y < LEVEL_H; ++y) {
 
-        for (x = 0; x < MAP_W; ++x)
+        for (x = 0; x < LEVEL_W; ++x)
             level[y][x] = ' ';
     }
 
