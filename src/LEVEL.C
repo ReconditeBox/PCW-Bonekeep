@@ -32,7 +32,7 @@
 #define TCOFFIN 22
 
 
-char level[MAP_H][MAP_W];
+char level[LEVEL_H][LEVEL_W];
 
 int level_w;
 int level_h;
@@ -199,7 +199,7 @@ char expected;
     int c;
 
     unsigned char header[MHSZ];
-    unsigned char row[MAP_W];
+    unsigned char row[LEVEL_W];
     unsigned char id;
 
 
@@ -234,9 +234,9 @@ char expected;
 
 
     if (width <= 0 ||
-        width > MAP_W ||
+        width > LEVEL_W ||
         height <= 0 ||
-        height > MAP_H ||
+        height > LEVEL_H ||
         header[6] != MTYPES ||
         header[7] != 0) {
 
@@ -360,7 +360,7 @@ int level_number;
     int c;
 
     unsigned char header[MHSZ];
-    unsigned char row[MAP_W];
+    unsigned char row[LEVEL_W];
     unsigned char id;
 
 
@@ -369,9 +369,9 @@ int level_number;
      * remain void.
      */
 
-    for (y = 0; y < MAP_H; ++y) {
+    for (y = 0; y < LEVEL_H; ++y) {
 
-        for (x = 0; x < MAP_W; ++x)
+        for (x = 0; x < LEVEL_W; ++x)
             level[y][x] = ' ';
     }
 
@@ -416,9 +416,9 @@ int level_number;
 
 
     if (width <= 0 ||
-        width > MAP_W ||
+        width > LEVEL_W ||
         height <= 0 ||
-        height > MAP_H) {
+        height > LEVEL_H) {
 
         close(fd);
         return 0;
