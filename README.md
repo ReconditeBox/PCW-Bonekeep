@@ -14,8 +14,12 @@ under active playtesting and balance work.
 
 ## Target environment
 
-The current development target is an Amstrad PCW / compatible emulator
-running CP/M Plus with Hi-Tech C 3.09-21.
+BONEKEEP now has two build targets:
+
+- Amstrad PCW / compatible emulator running CP/M Plus, using the native PCW/Joyce terminal controls at 90 x 30.
+- Generic CP/M 2.2 using an 80 x 24 VT100-compatible terminal.
+
+Both targets are built with Hi-Tech C 3.09-21 and use the same 75 x 24 dungeon files and runtime data.
 
 BONEKEEP is sensitive to available TPA. The final game link deliberately uses
 Hi-Tech C's `-N` option to keep startup memory small enough for the current
@@ -35,6 +39,24 @@ They compile the modules individually and finish with:
 
 The linker produces `GAME.COM`; the build script renames it to
 `BONEKEEP.COM`.
+
+### Generic CP/M 2.2 / VT100 build
+
+The alternate 80-column build commands are in:
+
+    BUILD80.SUB
+
+This build defines `VT100_80`, links `SCREEN80.C` instead of `SCREEN.C`,
+and renames the result to:
+
+    BONE80.COM
+
+It expects a VT100-compatible 80 x 24 terminal. The logical dungeon remains
+75 x 24; the terminal edition displays a scrolling 64 x 18 viewport with the
+status and inventory panel on the right and messages at the bottom.
+
+The VT100 build uses standard CP/M 2.2 console services for its startup random
+seed rather than the CP/M Plus clock BDOS call used by the PCW build.
 
 The map utilities are built by the commands in:
 
@@ -69,11 +91,13 @@ documentation.
 
 A playable directory requires at least:
 
-- `BONEKEEP.COM`
+- `BONEKEEP.COM` (PCW build) or `BONE80.COM` (generic CP/M 2.2 / VT100 build)
 - `BONEKEEP.DAT`
 - the encoded `LEVEL.xxx` files used by the dungeon
 
-`BONEKEEP.DAT` is stored under `runtime/` in this repository.
+`BONEKEEP.DAT` is stored under `runtime/` in this repository. The VT100 build
+uses the same file and renders its randomized ending text in an 80-column-safe
+victory screen.
 
 The player's manual is `src/BONEKEEP.TXT`.
 
