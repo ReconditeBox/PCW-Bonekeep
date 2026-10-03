@@ -726,6 +726,15 @@ char stair;
 
     pcw_clear_map();
 
+#ifdef VT100_80
+
+    pcw_view_update(
+        player_x,
+        player_y
+    );
+
+#endif
+
 
     reveal_position(
         player_x,
@@ -2193,53 +2202,201 @@ int dy;
 
 static void show_death_grave()
 {
+    char name[31];
     int len;
-    int x;
+    int name_x;
+
+
+    len = 0;
+
+
+    while (player_name[len] &&
+           len < 30) {
+
+        name[len] =
+            player_name[len];
+
+
+        if (name[len] >= 'a' &&
+            name[len] <= 'z')
+            name[len] -=
+                ('a' - 'A');
+
+
+        ++len;
+    }
+
+
+    name[len] = 0;
+
+
+    /*
+     * Same tombstone layout as the PCW version,
+     * shifted up two rows to fit 80 x 24.
+     */
+
+    name_x =
+        30 + ((30 - len) / 2);
 
 
     pcw_clear();
     pcw_cursor(0);
 
 
-    pcw_text(35, 3, "BONEKEEP");
-    pcw_text(35, 6, "HERE LIES");
-
-
-    len = 0;
-
-    while (player_name[len] &&
-           len < 30)
-        ++len;
-
-
-    x = (SCREEN_W - len) / 2;
+    pcw_text(
+        11, 0,
+        "                            _____  _____"
+    );
 
     pcw_text(
-        x,
-        8,
-        player_name
+        11, 1,
+        "                           <     `/     |"
+    );
+
+    pcw_text(
+        11, 2,
+        "                            >          ("
+    );
+
+    pcw_text(
+        11, 3,
+        "                           |   _     _  |"
+    );
+
+    pcw_text(
+        11, 4,
+        "                           |  |_) | |_) |"
+    );
+
+    pcw_text(
+        11, 5,
+        "                           |  | \\ | |   |"
+    );
+
+    pcw_text(
+        11, 6,
+        "                           |            |"
+    );
+
+    pcw_text(
+        11, 7,
+        "            ______.______%_|            |__________  _____"
+    );
+
+    pcw_text(
+        11, 8,
+        "          _/                                       \\|     |"
+    );
+
+    pcw_text(
+        11, 9,
+        "         |                                               <"
+    );
+
+    pcw_text(
+        name_x,
+        9,
+        name
+    );
+
+    pcw_text(
+        11, 10,
+        "         |_____.-._________              ____/|___________|"
+    );
+
+    pcw_text(
+        11, 11,
+        "                           |            |"
+    );
+
+    pcw_text(
+        11, 12,
+        "                           | GOLD       |"
+    );
+
+    pcw_goto(
+        46, 12
+    );
+
+    pcw_number(
+        player_gold
     );
 
 
-    pcw_text(22, 11, "Your adventure in the Bonekeep is over.");
+    pcw_text(
+        11, 13,
+        "                           | KILLS      |"
+    );
+
+    pcw_goto(
+        46, 13
+    );
+
+    pcw_number(
+        player_kills
+    );
 
 
-    pcw_text(19, 14, "GOLD");
-    pcw_goto(24, 14);
-    pcw_number(player_gold);
+    pcw_text(
+        11, 14,
+        "                           | TURNS      |"
+    );
 
-    pcw_text(34, 14, "KILLS");
-    pcw_goto(40, 14);
-    pcw_number(player_kills);
+    pcw_goto(
+        46, 14
+    );
 
-    pcw_text(50, 14, "TURNS");
-    pcw_goto(56, 14);
-    pcw_number(turn_count);
+    pcw_number(
+        turn_count
+    );
 
 
-    pcw_text(33, 20, "Press any key.");
+    pcw_text(
+        11, 15,
+        "                           |   _        <"
+    );
+
+    pcw_text(
+        11, 16,
+        "                           |__/         |"
+    );
+
+    pcw_text(
+        11, 17,
+        "                           / `--.      |"
+    );
+
+    pcw_text(
+        11, 18,
+        "                          %|            |%"
+    );
+
+    pcw_text(
+        11, 19,
+        "                      |/.%%|          -< @%%%"
+    );
+
+    pcw_text(
+        11, 20,
+        "                      `\\%`@|     v      |@@%@%%"
+    );
+
+    pcw_text(
+        11, 21,
+        "                    .%%%@@@|%    |    % @@@%%@%%%%"
+    );
+
+    pcw_text(
+        11, 22,
+        "               _.%%%%%%@@@@@@@@@@@@@@@@@@@@@@@@%%%%%%"
+    );
+
+
+    pcw_text(
+        33, 23,
+        "Press any key."
+    );
 }
-
 #else
 
 static void show_death_grave()
@@ -2622,6 +2779,15 @@ int main()
 
 
     visibility_reset();
+
+#ifdef VT100_80
+
+    pcw_view_update(
+        player_x,
+        player_y
+    );
+
+#endif
 
 
     reveal_position(
