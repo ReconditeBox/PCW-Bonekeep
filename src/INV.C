@@ -232,7 +232,7 @@ int slot;
 
     pcw_goto(
         PANEL_X,
-        15 + slot
+        INV_FIRST_Y + slot
     );
 
 
