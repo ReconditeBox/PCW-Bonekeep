@@ -636,10 +636,14 @@ char stair;
 
 
     /*
-     * Validate before replacing the current map.  This also
-     * checks that the destination carries the opposite stair
-     * at exactly the same coordinate.
+     * The PCW build keeps its original pre-load validation.
+     *
+     * The VT100 build validates after loading the destination
+     * into the logical level array.  This deliberately keeps
+     * viewport coordinates completely out of stair matching.
      */
+
+#ifndef VT100_80
 
     if (!level_entry_ok(
             name,
@@ -654,6 +658,8 @@ char stair;
 
         return 0;
     }
+
+#endif
 
 
     /*
@@ -716,6 +722,37 @@ char stair;
 
         visibility_reset();
     }
+
+
+#ifdef VT100_80
+
+    /*
+     * Check the stair against logical dungeon coordinates
+     * only after the destination has been loaded.  The
+     * 64 x 18 terminal viewport never participates in this
+     * test.
+     */
+
+    if (entry_x < 0 ||
+        entry_y < 0 ||
+        entry_x >= level_w ||
+        entry_y >= level_h ||
+        level[entry_y][entry_x] != expected) {
+
+        load_level_state(current_level);
+
+        player_x = entry_x;
+        player_y = entry_y;
+
+
+        show_message(
+            "No matching stair on that level."
+        );
+
+        return 0;
+    }
+
+#endif
 
 
     current_level = target;
